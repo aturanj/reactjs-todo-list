@@ -25,10 +25,11 @@ export class TodoItem extends Component {
 
             <div style={this.getStyle()}>
                 <p>
-                    <input type="checkbox" onChange={this.props.markCompleted.bind(this,id)}/>
+                    <input type="checkbox" onChange={this.props.markCompleted.bind(this, id)} />
                     {' '}
                     {title}
-                    </p>
+                    <button style={buttonStyle} onClick={this.props.deleteOurTodo.bind(this, id)}> X </button>
+                </p>
             </div>
         )
     }
@@ -37,6 +38,15 @@ export class TodoItem extends Component {
 //Prop Types
 TodoItem.propTypes = {
     ourTodo: PropTypes.object.isRequired  //an object
+}
+
+const buttonStyle = {
+    backgroundColor: 'red',
+    color: 'white',
+    padding: '5px',
+    borderRadius: '22%',
+    cursor: 'pointer',
+    float: 'right'
 }
 
 export default TodoItem
