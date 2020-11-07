@@ -2,3 +2,20 @@
 body{
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.container{
+  padding: 0 1rem;
+}
+
+.addButton{
+  display: inline-block;
+  border: none;
+  background: #555;
+  color: #fff;
+  padding: 7px 20px;
+  cursor: pointer;
+}
+
+.addButton:hover{
+  background: #666;
+}
