@@ -1,13 +1,17 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import Header from './components/layout/Header';
 import Todos from './components/Todos';
 import AddTodo from './components/AddTodo';
-import uuid from 'react-uuid';
+import About from './components/pages/About';
+//import uuid from 'react-uuid';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+import Axios from 'axios';
 import './App.css';
 
 class App extends Component {
 
   state = {
+    /*
     todos: [{
       id: uuid(),
       title: 'Take out the trash',
@@ -22,6 +26,18 @@ class App extends Component {
       title: 'Meeting with boss',
       completed: false
     }]
+    */
+
+    todos: []
+  }
+
+  componentDidMount() {
+
+    console.log("fetch up-to-date data");
+
+    Axios
+      .get('https://jsonplaceholder.typicode.com/todos')
+      .then(response => this.setState({ todos: response.data }));
   }
 
   markCompleted = (id) => {
@@ -41,20 +57,33 @@ class App extends Component {
   }
 
   deleteOurTodo = (id) => {
+
+    Axios
+      .delete(`https://jsonplaceholder.typicode.com/todos/${id}`);  
+      //.then(this.componentDidMount()); //get up-to-date data
+
+    // only for visual 
     this.setState({ todos: [...this.state.todos.filter(item => item.id !== id)] })
   }
 
   addOurTodo = (title) => {
 
-    //console.log(title);
-
+    /*
     const newTodo = {
       id: uuid(),
       title: title,
       completed: false
     }
+    */
 
-    this.setState({ todos: [...this.state.todos, newTodo] })
+    Axios
+      .post('https://jsonplaceholder.typicode.com/todos', {
+        title: title,
+        completed: false
+      })
+      .then(response => this.setState({ todos: [...this.state.todos, response.data] }));
+
+    //this.setState({ todos: [...this.state.todos, newTodo] })
   }
 
   render() {
@@ -62,20 +91,31 @@ class App extends Component {
     /* console.log(this.state.todos); */
 
     return (
-      <div className="App">
+      <Router>
+        <div className="App">
+          <div className="container">
 
-        <div className="container">
+            <Header />
 
-          <Header />
+            <Route exact path="/" render={props => (
 
-          <AddTodo addOurTodo={this.addOurTodo} />
+              <React.Fragment>
 
-          <Todos todoList={this.state.todos}
-            markCompleted={this.markCompleted}
-            deleteOurTodo={this.deleteOurTodo} />
+                <AddTodo addOurTodo={this.addOurTodo} />
 
+                <Todos todoList={this.state.todos}
+                  markCompleted={this.markCompleted}
+                  deleteOurTodo={this.deleteOurTodo} />
+
+              </React.Fragment>
+
+            )} />
+
+            <Route path="/about" component={About} />
+
+          </div>
         </div>
-      </div>
+      </Router>
     );
   }
 }
